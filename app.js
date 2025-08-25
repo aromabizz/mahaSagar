@@ -5,8 +5,8 @@ const WORKER_ENDPOINT = "https://YOUR_WORKER_ENDPOINT/submit";
 // Certificate settings
 const CANVAS_WIDTH = 960;    // certificate width
 const CANVAS_HEIGHT = 720;   // certificate height
-const NAME_X = 230;          // X position (just after श्री/श्रीमती)
-const NAME_Y = 240;          // Y position (same line as श्री/श्रीमती)
+const NAME_X = 240;          // X position (just after श्री/श्रीमती)
+const NAME_Y = 250;          // Y position (same line as श्री/श्रीमती)
 const NAME_BASE_SIZE = 34;   // starting font size
 const NAME_MAX_WIDTH = 460;  // maximum name width
 

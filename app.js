@@ -89,7 +89,7 @@ document.getElementById("another").addEventListener("click", () => {
   document.getElementById("result-section").classList.add("hidden");
   document.getElementById("form-section").classList.remove("hidden");
   document.getElementById("member-form").reset();
-  document.getElementById("save-status").textContent = "";
+  document.getElementById("save-status").textContent = "✅ तुमचा प्रतिसाद यशस्वीरित्या सेव्ह झाला आहे!";
 });
 
 // On form submit

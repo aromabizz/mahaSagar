@@ -23,14 +23,6 @@ async function ensureFontsLoaded() {
   }
 }
 
-// Compute gender title in Marathi
-function genderTitle(gender) {
-  switch ((gender || "").toLowerCase()) {
-    case "male": return "श्री";
-    case "female": return "श्रीमती";
-    default: return "श्री/श्रीमती";
-  }
-}
 
 // Draw the certificate and return a dataURL
 async function generateCertificate(name, gender) {
@@ -50,7 +42,7 @@ async function generateCertificate(name, gender) {
   });
 
   // Prepare name text (prefix + name)
-  const label = `${genderTitle(gender)} ${name}`.trim();
+  const label = name;
 
   // Fit text within max width by reducing font size if necessary
   let fontSize = NAME_BASE_SIZE;

@@ -1,35 +1,29 @@
 // ---- CONFIG ----
-// Replace with your Cloudflare Worker (or Netlify Function) endpoint
-// Example: https://your-worker.subdomain.workers.dev/submit
+// Replace with your Cloudflare Worker endpoint
 const WORKER_ENDPOINT = "https://YOUR_WORKER_ENDPOINT/submit";
 
-// Certificate canvas settings (adjust Y position and sizes to match your template)
-const CANVAS_WIDTH = 960;
-const CANVAS_HEIGHT = 720;
-const NAME_Y = 260;           // Vertical position of the Name
-const NAME_MAX_WIDTH = 460;  // Max width for fitting long names
-const NAME_BASE_SIZE = 42;    // Start font size; will shrink if needed
+// Certificate canvas settings
+const CANVAS_WIDTH = 960;    // certificate width
+const CANVAS_HEIGHT = 720;   // certificate height
+const NAME_X = 230;          // X position (just after श्री/श्रीमती)
+const NAME_Y = 260;          // Y position (same line as श्री/श्रीमती)
+const NAME_BASE_SIZE = 42;   // starting font size
+const NAME_MAX_WIDTH = 460;  // max width allowed for name
 
-// And when drawing text:
-ctx.textAlign = "left";    // align from left side
-ctx.fillText(label, 230, NAME_Y); // X=230 (a bit after श्री/श्रीमती)
-
-// Template image relative path in the same repo
+// Template image relative path
 const TEMPLATE_IMAGE = "./cert-template.png";
 
-// Fonts: ensure the font is loaded before drawing text on canvas
+// Ensure fonts load
 async function ensureFontsLoaded() {
   if (document.fonts && document.fonts.ready) {
     await document.fonts.ready;
   } else {
-    // Fallback small delay
     await new Promise(r => setTimeout(r, 300));
   }
 }
 
-
-// Draw the certificate and return a dataURL
-async function generateCertificate(name, gender) {
+// Draw the certificate with the given name
+async function generateCertificate(name) {
   await ensureFontsLoaded();
 
   const canvas = document.getElementById("cert-canvas");
@@ -37,45 +31,46 @@ async function generateCertificate(name, gender) {
   canvas.height = CANVAS_HEIGHT;
   const ctx = canvas.getContext("2d");
 
-  // Draw background template
+  // Draw background
   await new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = () => { ctx.drawImage(img, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); resolve(); };
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      resolve();
+    };
     img.onerror = reject;
     img.src = TEMPLATE_IMAGE;
   });
 
-  // Prepare name text (prefix + name)
-  const label = name;
+  const label = name.trim();
 
-  // Fit text within max width by reducing font size if necessary
+  // Fit text width
   let fontSize = NAME_BASE_SIZE;
-  ctx.textAlign = "center";
+  ctx.textAlign = "left";
   ctx.textBaseline = "middle";
 
-  while (fontSize > 32) {
+  while (fontSize > 20) {
     ctx.font = `700 ${fontSize}px "Noto Serif Devanagari", serif`;
     const w = ctx.measureText(label).width;
     if (w <= NAME_MAX_WIDTH) break;
     fontSize -= 2;
   }
 
-  // Draw name with a soft shadow for readability
-  ctx.fillStyle = "rgba(0,0,0,0.20)";
-  ctx.fillText(label, CANVAS_WIDTH/2 + 3, NAME_Y + 3);
+  // Shadow for readability
+  ctx.fillStyle = "rgba(0,0,0,0.25)";
+  ctx.fillText(label, NAME_X + 2, NAME_Y + 2);
   ctx.fillStyle = "#222222";
-  ctx.fillText(label, CANVAS_WIDTH/2, NAME_Y);
+  ctx.fillText(label, NAME_X, NAME_Y);
 
-  // Return data URL (PNG)
   return canvas.toDataURL("image/png");
 }
 
-// Save response via Worker -> GitHub CSV
+// Save response to repo via Worker
 async function saveResponse(payload) {
   const res = await fetch(WORKER_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const t = await res.text();
@@ -84,6 +79,7 @@ async function saveResponse(payload) {
   return await res.json();
 }
 
+// Collect form data
 function getFormData() {
   const name = document.getElementById("name").value.trim();
   const mobile = document.getElementById("mobile").value.trim();
@@ -95,6 +91,7 @@ function getFormData() {
   return { name, mobile, gender, age, email, address };
 }
 
+// Reset form
 document.getElementById("another").addEventListener("click", () => {
   document.getElementById("result-section").classList.add("hidden");
   document.getElementById("form-section").classList.remove("hidden");
@@ -102,6 +99,7 @@ document.getElementById("another").addEventListener("click", () => {
   document.getElementById("save-status").textContent = "";
 });
 
+// On submit
 document.getElementById("member-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -114,28 +112,27 @@ document.getElementById("member-form").addEventListener("submit", async (e) => {
     const data = getFormData();
     if (!data.name) throw new Error("Name is required");
 
-    // 1) Generate certificate image
-    const dataURL = await generateCertificate(data.name, data.gender);
+    // 1) Generate certificate
+    const dataURL = await generateCertificate(data.name);
 
-    // 2) Show result section and preview
+    // 2) Show preview + download
     document.getElementById("form-section").classList.add("hidden");
     document.getElementById("result-section").classList.remove("hidden");
+    document.getElementById("download-png").href = dataURL;
 
-    // Set download link for PNG
-    const link = document.getElementById("download-png");
-    link.href = dataURL;
-
-    // 3) Save to CSV via Worker (in parallel is okay)
+    // 3) Save to CSV via Worker
     const payload = {
       ...data,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    const out = await saveResponse(payload);
-    document.getElementById("save-status").textContent = "Responses saved to repository ✓";
+    await saveResponse(payload);
+    document.getElementById("save-status").textContent =
+      "Responses saved to repository ✓";
   } catch (err) {
     console.error(err);
     alert(err.message || "Something went wrong");
-    document.getElementById("save-status").textContent = "Save failed. Please try again.";
+    document.getElementById("save-status").textContent =
+      "Save failed. Please try again.";
   } finally {
     btn.disabled = false;
     status.textContent = "";

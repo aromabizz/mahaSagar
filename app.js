@@ -6,7 +6,7 @@ const WORKER_ENDPOINT = "https://YOUR_WORKER_ENDPOINT/submit";
 // Certificate canvas settings (adjust Y position and sizes to match your template)
 const CANVAS_WIDTH = 1600;
 const CANVAS_HEIGHT = 1200;
-const NAME_Y = 300;           // Vertical position of the Name
+const NAME_Y = 100;           // Vertical position of the Name
 const NAME_MAX_WIDTH = 1400;  // Max width for fitting long names
 const NAME_BASE_SIZE = 96;    // Start font size; will shrink if needed
 

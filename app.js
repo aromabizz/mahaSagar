@@ -1,6 +1,6 @@
 // ---- CONFIG ----
 // Replace with your Cloudflare Worker endpoint
-const WORKER_ENDPOINT = "https://YOUR_WORKER_ENDPOINT/submit";
+const WORKER_ENDPOINT = "https://script.google.com/macros/s/AKfycbyPcQWLhls6xdexnrXfzZhQxuB9TiH1E8a89-mMNlme36PegqWGngZhJaB0W1Ouje4/exec";
 
 // Certificate settings
 const CANVAS_WIDTH = 960;    // certificate width

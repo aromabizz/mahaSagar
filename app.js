@@ -2,18 +2,18 @@
 // Replace with your Cloudflare Worker endpoint
 const WORKER_ENDPOINT = "https://YOUR_WORKER_ENDPOINT/submit";
 
-// Certificate canvas settings
+// Certificate settings
 const CANVAS_WIDTH = 960;    // certificate width
 const CANVAS_HEIGHT = 720;   // certificate height
 const NAME_X = 230;          // X position (just after श्री/श्रीमती)
 const NAME_Y = 260;          // Y position (same line as श्री/श्रीमती)
 const NAME_BASE_SIZE = 42;   // starting font size
-const NAME_MAX_WIDTH = 460;  // max width allowed for name
+const NAME_MAX_WIDTH = 460;  // maximum name width
 
-// Template image relative path
+// Template image
 const TEMPLATE_IMAGE = "./cert-template.png";
 
-// Ensure fonts load
+// Ensure fonts are loaded
 async function ensureFontsLoaded() {
   if (document.fonts && document.fonts.ready) {
     await document.fonts.ready;
@@ -22,7 +22,7 @@ async function ensureFontsLoaded() {
   }
 }
 
-// Draw the certificate with the given name
+// Generate certificate
 async function generateCertificate(name) {
   await ensureFontsLoaded();
 
@@ -31,24 +31,19 @@ async function generateCertificate(name) {
   canvas.height = CANVAS_HEIGHT;
   const ctx = canvas.getContext("2d");
 
-  // Draw background
-  await new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-      resolve();
-    };
-    img.onerror = reject;
-    img.src = TEMPLATE_IMAGE;
-  });
+  // Draw certificate background
+  const img = new Image();
+  img.src = TEMPLATE_IMAGE;
+  await img.decode();
+  ctx.drawImage(img, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+  // Prepare name
   const label = name.trim();
 
-  // Fit text width
+  // Fit font size if name is long
   let fontSize = NAME_BASE_SIZE;
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-
   while (fontSize > 20) {
     ctx.font = `700 ${fontSize}px "Noto Serif Devanagari", serif`;
     const w = ctx.measureText(label).width;
@@ -56,16 +51,14 @@ async function generateCertificate(name) {
     fontSize -= 2;
   }
 
-  // Shadow for readability
-  ctx.fillStyle = "rgba(0,0,0,0.25)";
-  ctx.fillText(label, NAME_X + 2, NAME_Y + 2);
+  // Draw text
   ctx.fillStyle = "#222222";
   ctx.fillText(label, NAME_X, NAME_Y);
 
   return canvas.toDataURL("image/png");
 }
 
-// Save response to repo via Worker
+// Save response to GitHub via Worker
 async function saveResponse(payload) {
   const res = await fetch(WORKER_ENDPOINT, {
     method: "POST",
@@ -99,7 +92,7 @@ document.getElementById("another").addEventListener("click", () => {
   document.getElementById("save-status").textContent = "";
 });
 
-// On submit
+// On form submit
 document.getElementById("member-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -115,16 +108,13 @@ document.getElementById("member-form").addEventListener("submit", async (e) => {
     // 1) Generate certificate
     const dataURL = await generateCertificate(data.name);
 
-    // 2) Show preview + download
+    // 2) Show result
     document.getElementById("form-section").classList.add("hidden");
     document.getElementById("result-section").classList.remove("hidden");
     document.getElementById("download-png").href = dataURL;
 
-    // 3) Save to CSV via Worker
-    const payload = {
-      ...data,
-      timestamp: new Date().toISOString(),
-    };
+    // 3) Save to repo
+    const payload = { ...data, timestamp: new Date().toISOString() };
     await saveResponse(payload);
     document.getElementById("save-status").textContent =
       "Responses saved to repository ✓";

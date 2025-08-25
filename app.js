@@ -60,17 +60,21 @@ async function generateCertificate(name) {
 
 // Save response to GitHub via Worker
 async function saveResponse(payload) {
+  const formData = new URLSearchParams(payload);
+
   const res = await fetch(WORKER_ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: formData,
   });
+
   if (!res.ok) {
     const t = await res.text();
     throw new Error(`Save failed (${res.status}): ${t}`);
   }
+
   return await res.json();
 }
+
 
 // Collect form data
 function getFormData() {

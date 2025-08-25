@@ -4,11 +4,15 @@
 const WORKER_ENDPOINT = "https://YOUR_WORKER_ENDPOINT/submit";
 
 // Certificate canvas settings (adjust Y position and sizes to match your template)
-const CANVAS_WIDTH = 1600;
-const CANVAS_HEIGHT = 1200;
-const NAME_Y = 250;           // Vertical position of the Name
-const NAME_MAX_WIDTH = 1000;  // Max width for fitting long names
-const NAME_BASE_SIZE = 68;    // Start font size; will shrink if needed
+const CANVAS_WIDTH = 960;
+const CANVAS_HEIGHT = 720;
+const NAME_Y = 260;           // Vertical position of the Name
+const NAME_MAX_WIDTH = 460;  // Max width for fitting long names
+const NAME_BASE_SIZE = 42;    // Start font size; will shrink if needed
+
+// And when drawing text:
+ctx.textAlign = "left";    // align from left side
+ctx.fillText(label, 230, NAME_Y); // X=230 (a bit after श्री/श्रीमती)
 
 // Template image relative path in the same repo
 const TEMPLATE_IMAGE = "./cert-template.png";

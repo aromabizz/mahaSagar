@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="mr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>महासागर फाउंडेशन - सदस्यत्व फॉर्म</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root { --pad: 1rem; }
+      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Noto Sans Devanagari", sans-serif; }
+      .mr-serif { font-family: "Noto Serif Devanagari", serif; }
+    </style>
+  </head>
+  <body class="bg-slate-50">
+    <main class="max-w-3xl mx-auto p-6">
+      <header class="mb-6">
+        <h1 class="text-3xl font-bold mr-serif text-slate-800">महासागर फाउंडेशन - सदस्यत्व फॉर्म</h1>
+        <p class="text-slate-600 mt-2 mr-serif">आपल्या फाउंडेशनचे सक्रिय सदस्य होण्यासाठी आणि आपल्या समाजात योगदान देण्यासाठी खालील फॉर्म भरून नोंदणी करा.</p>
+      </header>
+
+      <!-- FORM CARD -->
+      <section id="form-section" class="bg-white rounded-2xl shadow p-6 space-y-4">
+        <form id="member-form" class="space-y-5">
+          <div>
+            <label class="block font-semibold">Name | नाव <span class="text-red-600">*</span></label>
+            <input name="name" id="name" required class="w-full rounded-xl border px-3 py-2" placeholder="तुमचे नाव" />
+          </div>
+
+          <div>
+            <label class="block font-semibold">Mobile Number (WhatsApp) | मोबाईल नंबर (व्हॉट्सॲप)</label>
+            <input name="mobile" id="mobile" class="w-full rounded-xl border px-3 py-2" placeholder="00000 00000" />
+          </div>
+
+          <div>
+            <label class="block font-semibold">Gender | लिंग</label>
+            <select name="gender" id="gender" class="w-full rounded-xl border px-3 py-2">
+              <option value="">Select / निवडा</option>
+              <option value="Male">पुरुष (Male)</option>
+              <option value="Female">स्त्री (Female)</option>
+              <option value="Other">इतर (Other)</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold">Age | वय</label>
+              <input name="age" id="age" type="number" min="0" class="w-full rounded-xl border px-3 py-2" placeholder="उदा. 25" />
+            </div>
+            <div>
+              <label class="block font-semibold">Email | ईमेल</label>
+              <input name="email" id="email" type="email" class="w-full rounded-xl border px-3 py-2" placeholder="you@example.com" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold">Address | पत्ता</label>
+            <textarea name="address" id="address" rows="3" class="w-full rounded-xl border px-3 py-2" placeholder="तपशीलवार पत्ता"></textarea>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button id="submitBtn" class="rounded-xl bg-slate-900 text-white px-4 py-2 hover:bg-slate-800">Submit</button>
+            <span id="form-status" class="text-sm text-slate-600"></span>
+          </div>
+        </form>
+      </section>
+
+      <!-- RESULT / DOWNLOAD CARD -->
+      <section id="result-section" class="hidden mt-8 bg-white rounded-2xl shadow p-6">
+        <h2 class="text-2xl font-semibold mr-serif text-slate-800">आपले प्रमाणपत्र तयार झाले ✅</h2>
+        <p class="text-slate-600 mt-1 mr-serif">खालील पूर्वावलोकन तपासा आणि डाउनलोड करा.</p>
+
+        <div class="mt-4">
+          <canvas id="cert-canvas" class="w-full border rounded-xl"></canvas>
+        </div>
+
+        <div class="mt-4 flex gap-3">
+          <a id="download-png" download="Mahasagar-Membership-Certificate.png" class="rounded-xl bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 cursor-pointer">Download PNG</a>
+          <button id="another" class="rounded-xl bg-slate-200 px-4 py-2 hover:bg-slate-300">Fill another response</button>
+        </div>
+
+        <p id="save-status" class="text-sm text-slate-500 mt-3"></p>
+      </section>
+
+      <footer class="mt-10 text-center text-xs text-slate-500">
+        © <span id="year"></span> महासागर फाउंडेशन
+      </footer>
+    </main>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+    <script src="./app.js"></script>
+  </body>
+</html>

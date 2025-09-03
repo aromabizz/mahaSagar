@@ -5,7 +5,7 @@ const WORKER_ENDPOINT = "https://script.google.com/macros/s/AKfycbxaHR_VQgL4JSL3
 const CANVAS_WIDTH = 960;
 const CANVAS_HEIGHT = 720;
 const NAME_X = 235;
-const NAME_Y = 250;
+const NAME_Y = 260;
 const NAME_BASE_SIZE = 34;
 const NAME_MAX_WIDTH = 460;
 const TEMPLATE_IMAGE = "./Mahasagar-cert.png";
@@ -45,7 +45,7 @@ async function generateCertificate(name) {
     fontSize -= 2;
   }
 
-  ctx.fillStyle = "#222222";
+  ctx.fillStyle = "#432808";
   ctx.fillText(label, NAME_X, NAME_Y);
 
   return canvas.toDataURL("image/png");

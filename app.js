@@ -4,8 +4,8 @@ const WORKER_ENDPOINT = "https://script.google.com/macros/s/AKfycbxaHR_VQgL4JSL3
 // Certificate settings
 const CANVAS_WIDTH = 960;
 const CANVAS_HEIGHT = 720;
-const NAME_X = 235;
-const NAME_Y = 260;
+const NAME_X = 250;
+const NAME_Y = 332;
 const NAME_BASE_SIZE = 34;
 const NAME_MAX_WIDTH = 460;
 const TEMPLATE_IMAGE = "./Mahasagar-cert.png";

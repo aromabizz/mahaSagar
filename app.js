@@ -8,7 +8,7 @@ const NAME_X = 240;
 const NAME_Y = 310;
 const NAME_BASE_SIZE = 34;
 const NAME_MAX_WIDTH = 460;
-const TEMPLATE_IMAGE = "./Mahasagar-cert3.png";
+const TEMPLATE_IMAGE = "./Mahasagar-cert4.png";
 
 // Ensure fonts are loaded
 async function ensureFontsLoaded() {

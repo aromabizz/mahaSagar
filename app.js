@@ -4,11 +4,11 @@ const WORKER_ENDPOINT = "https://script.google.com/macros/s/AKfycbxaHR_VQgL4JSL3
 // Certificate settings
 const CANVAS_WIDTH = 960;
 const CANVAS_HEIGHT = 720;
-const NAME_X = 240;
-const NAME_Y = 310;
+const NAME_X = 390;
+const NAME_Y = 320;
 const NAME_BASE_SIZE = 34;
 const NAME_MAX_WIDTH = 460;
-const TEMPLATE_IMAGE = "./Mahasagar-cert4.png";
+const TEMPLATE_IMAGE = "./Mahasagar-cert6.png";
 
 // Ensure fonts are loaded
 async function ensureFontsLoaded() {
